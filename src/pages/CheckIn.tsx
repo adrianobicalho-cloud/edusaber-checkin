@@ -47,6 +47,15 @@ export default function CheckIn() {
       {/* Main Card */}
       <div className="w-full max-w-md animate-scale-in">
         <div className="glass-card rounded-3xl p-6 sm:p-8 shadow-2xl">
+          {/* Logo */}
+          <div className="flex justify-center mb-4">
+            <img
+              src="/logo-feira.jpg"
+              alt="Logo Feira EduSaber 2026"
+              className="h-28 w-28 sm:h-32 sm:w-32 object-contain rounded-full shadow-lg bg-white p-1 ring-4 ring-teal-500/20"
+            />
+          </div>
+
           {/* Title */}
           <h1 className="text-center text-2xl sm:text-3xl font-black text-gray-800 leading-tight mb-2">
             LISTA DE PRESENÇA

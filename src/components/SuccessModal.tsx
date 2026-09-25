@@ -27,8 +27,17 @@ export default function SuccessModal({ isOpen, onClose, totalPeople, name }: Suc
         className="mx-4 w-full max-w-sm rounded-2xl bg-white p-8 text-center shadow-2xl animate-scale-in"
         onClick={(e) => e.stopPropagation()}
       >
-        <div className="mx-auto mb-4 flex h-20 w-20 items-center justify-center rounded-full bg-teal-100">
-          <CheckCircle2 className="h-12 w-12 text-teal-500" strokeWidth={2.5} />
+        <div className="relative mx-auto mb-4 flex justify-center">
+          <div className="relative">
+            <img
+              src="/logo-feira.jpg"
+              alt="Logo Feira EduSaber 2026"
+              className="h-24 w-24 object-contain rounded-full shadow-md bg-white p-1 ring-2 ring-teal-500/30"
+            />
+            <div className="absolute -bottom-1 -right-1 flex h-8 w-8 items-center justify-center rounded-full bg-teal-500 text-white shadow-lg ring-2 ring-white">
+              <CheckCircle2 className="h-5 w-5" strokeWidth={3} />
+            </div>
+          </div>
         </div>
         <h2 className="mb-2 text-2xl font-bold text-gray-800">
           Presença Registrada!
