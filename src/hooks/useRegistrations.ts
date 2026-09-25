@@ -1,4 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
+import * as XLSX from 'xlsx';
 import { Registration, AdminStats } from '../types';
 import { generateId } from '../lib/utils';
 
@@ -65,23 +66,51 @@ export function useRegistrations() {
 
   const exportCSV = useCallback(() => {
     const BOM = '\uFEFF';
-    const header = 'Nº,Horário,Nome,Acompanhantes,Total do Grupo';
+    const header = 'Nº;Data/Hora;Nome Completo;Acompanhantes;Total de Pessoas';
     const rows = registrations
       .slice()
       .sort((a, b) => new Date(a.timestamp).getTime() - new Date(b.timestamp).getTime())
       .map((r, i) => {
         const date = new Date(r.timestamp);
         const time = date.toLocaleString('pt-BR');
-        return `${i + 1},"${time}","${r.fullName}",${r.companions},${r.totalPeople}`;
+        return `${i + 1};"${time}";"${r.fullName.replace(/"/g, '""')}";${r.companions};${r.totalPeople}`;
       });
-    const csv = BOM + [header, ...rows].join('\n');
+    const csv = BOM + [header, ...rows].join('\r\n');
     const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
     const url = URL.createObjectURL(blob);
     const link = document.createElement('a');
     link.href = url;
-    link.download = 'presenca-edusaber-2026.csv';
+    link.download = 'lista-presenca-edusaber-2026.csv';
     link.click();
     URL.revokeObjectURL(url);
+  }, [registrations]);
+
+  const exportXLSX = useCallback(() => {
+    const data = registrations
+      .slice()
+      .sort((a, b) => new Date(a.timestamp).getTime() - new Date(b.timestamp).getTime())
+      .map((r, i) => ({
+        'Nº': i + 1,
+        'Data / Hora': new Date(r.timestamp).toLocaleString('pt-BR'),
+        'Nome Completo': r.fullName,
+        'Acompanhantes': r.companions,
+        'Total do Grupo': r.totalPeople,
+      }));
+
+    const worksheet = XLSX.utils.json_to_sheet(data);
+
+    // Ajusta a largura das colunas
+    worksheet['!cols'] = [
+      { wch: 8 },  // Nº
+      { wch: 22 }, // Data / Hora
+      { wch: 38 }, // Nome Completo
+      { wch: 16 }, // Acompanhantes
+      { wch: 16 }, // Total do Grupo
+    ];
+
+    const workbook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(workbook, worksheet, 'Presenças EduSaber');
+    XLSX.writeFile(workbook, 'lista-presenca-edusaber-2026.xlsx');
   }, [registrations]);
 
   return {
@@ -91,5 +120,6 @@ export function useRegistrations() {
     clearAll,
     getStats,
     exportCSV,
+    exportXLSX,
   };
 }
