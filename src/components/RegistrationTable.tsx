@@ -63,7 +63,7 @@ export default function RegistrationTable({ registrations, onRemove }: Registrat
                 </td>
               </tr>
             ) : (
-              filtered.map((r, i) => (
+              filtered.map((r) => (
                 <tr key={r.id} className="hover:bg-gray-50/50 transition-colors">
                   <td className="px-4 py-3 text-gray-500 font-mono">{registrations.length - registrations.indexOf(r)}</td>
                   <td className="px-4 py-3 text-gray-600 whitespace-nowrap">{formatDateTime(r.timestamp)}</td>
