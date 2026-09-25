@@ -36,8 +36,7 @@ function Index() {
   const [concluido, setConcluido] = useState(false);
   const [fechado, setFechado] = useState(false);
 
-  async function onSubmit(e: React.FormEvent) {
-    e.preventDefault();
+  async function onSubmit() {
     setErro(null);
     if (nome.trim().length < 3) {
       setErro("Informe seu nome completo.");
@@ -95,7 +94,7 @@ function Index() {
         LISTA DE PRESENÇA FEIRA EDUSABER 2026
       </h1>
 
-      <form onSubmit={onSubmit} className="card-fair mt-8 w-full max-w-md">
+      <div className="card-fair mt-8 w-full max-w-md">
         <label className="block font-display text-sm tracking-wide text-brand-green">
           NOME COMPLETO
         </label>
@@ -125,10 +124,15 @@ function Index() {
 
         {erro && <p className="mt-4 text-sm font-semibold text-destructive">{erro}</p>}
 
-        <button type="submit" disabled={enviando} className="btn-fair mt-6 w-full">
+        <button
+          type="button"
+          onClick={onSubmit}
+          disabled={enviando}
+          className="btn-fair mt-6 w-full"
+        >
           {enviando ? "Enviando..." : "Enviar"}
         </button>
-      </form>
+      </div>
 
       <Link
         to="/admin"

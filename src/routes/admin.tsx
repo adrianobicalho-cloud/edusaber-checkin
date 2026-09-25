@@ -93,25 +93,25 @@ function Admin() {
         <h1 className="text-center font-display text-2xl tracking-wide text-brand-blue">
           ÁREA DO ADMINISTRADOR
         </h1>
-        <form
-          onSubmit={(e) => {
-            e.preventDefault();
-            carregar(senha);
-          }}
-          className="card-fair mt-6 w-full max-w-sm"
-        >
+        <div className="card-fair mt-6 w-full max-w-sm">
           <label className="block font-display text-sm tracking-wide text-brand-green">SENHA</label>
           <input
             type="password"
             value={senha}
             onChange={(e) => setSenha(e.target.value)}
+            onKeyDown={(e) => e.key === "Enter" && carregar(senha)}
             className="input-fair mt-2"
           />
           {erro && <p className="mt-3 text-sm font-semibold text-destructive">{erro}</p>}
-          <button type="submit" disabled={carregando} className="btn-fair mt-5 w-full">
+          <button
+            type="button"
+            onClick={() => carregar(senha)}
+            disabled={carregando}
+            className="btn-fair mt-5 w-full"
+          >
             {carregando ? "Verificando..." : "Entrar"}
           </button>
-        </form>
+        </div>
         <Link to="/" className="mt-6 text-sm font-semibold text-brand-blue/70 underline">
           Voltar
         </Link>
