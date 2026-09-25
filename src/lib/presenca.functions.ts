@@ -31,7 +31,7 @@ export const registrarPresenca = createServerFn({ method: "POST" })
 export const listarPresencas = createServerFn({ method: "POST" })
   .inputValidator((data: { senha: string }) => ({ senha: String(data?.senha ?? "") }))
   .handler(async ({ data }) => {
-    if (data.senha !== (process.env["ADMIN_PASSWORD"] ?? "1234")) {
+    if (data.senha !== (process.env["ADMIN_PASSWORD"] ?? "Educativa2026")) {
       return { ok: false as const, registros: [] as Registro[] };
     }
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
