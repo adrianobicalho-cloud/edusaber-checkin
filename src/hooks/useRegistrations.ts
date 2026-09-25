@@ -36,7 +36,23 @@ export function useRegistrations() {
     return () => window.removeEventListener('storage', handleStorage);
   }, []);
 
-  const addRegistration = useCallback((fullName: string, companions: number): Registration => {
+  const isNameRegistered = useCallback((fullName: string): boolean => {
+    const normalized = fullName.trim().replace(/\s+/g, ' ').toLowerCase();
+    if (!normalized) return false;
+    return registrations.some(
+      r => r.fullName.trim().replace(/\s+/g, ' ').toLowerCase() === normalized
+    );
+  }, [registrations]);
+
+  const addRegistration = useCallback((fullName: string, companions: number): Registration | null => {
+    const normalized = fullName.trim().replace(/\s+/g, ' ').toLowerCase();
+    const exists = registrations.some(
+      r => r.fullName.trim().replace(/\s+/g, ' ').toLowerCase() === normalized
+    );
+    if (exists) {
+      return null;
+    }
+
     const registration: Registration = {
       id: generateId(),
       fullName: fullName.trim(),
@@ -46,7 +62,7 @@ export function useRegistrations() {
     };
     setRegistrations(prev => [registration, ...prev]);
     return registration;
-  }, []);
+  }, [registrations]);
 
   const removeRegistration = useCallback((id: string) => {
     setRegistrations(prev => prev.filter(r => r.id !== id));
@@ -116,6 +132,7 @@ export function useRegistrations() {
   return {
     registrations,
     addRegistration,
+    isNameRegistered,
     removeRegistration,
     clearAll,
     getStats,

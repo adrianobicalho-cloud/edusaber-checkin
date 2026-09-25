@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Atom } from 'lucide-react';
+import { Atom, AlertCircle } from 'lucide-react';
 import CompanionSelector from '../components/CompanionSelector';
 import SuccessModal from '../components/SuccessModal';
 import { useRegistrations } from '../hooks/useRegistrations';
@@ -10,19 +10,49 @@ export default function CheckIn() {
   const [companions, setCompanions] = useState<number | null>(null);
   const [showSuccess, setShowSuccess] = useState(false);
   const [lastRegistration, setLastRegistration] = useState<{ name: string; total: number } | null>(null);
-  const { addRegistration } = useRegistrations();
+  const [nameError, setNameError] = useState<string | null>(null);
+  const { addRegistration, isNameRegistered } = useRegistrations();
 
-  const canSubmit = fullName.trim().length >= 2 && companions !== null;
+  const handleNameChange = (val: string) => {
+    setFullName(val);
+    if (nameError) {
+      if (!isNameRegistered(val)) {
+        setNameError(null);
+      }
+    }
+  };
+
+  const handleNameBlur = () => {
+    if (fullName.trim().length >= 2 && isNameRegistered(fullName)) {
+      setNameError('NOME JÁ UTILIZADO');
+    }
+  };
+
+  const isDuplicate = isNameRegistered(fullName);
+  const canSubmit = fullName.trim().length >= 2 && companions !== null && !isDuplicate && !nameError;
 
   const handleSubmit = () => {
-    if (!canSubmit) return;
-    const reg = addRegistration(fullName, companions!);
+    if (fullName.trim().length < 2 || companions === null) return;
+
+    if (isNameRegistered(fullName)) {
+      setNameError('NOME JÁ UTILIZADO');
+      return;
+    }
+
+    const reg = addRegistration(fullName, companions);
+    if (!reg) {
+      setNameError('NOME JÁ UTILIZADO');
+      return;
+    }
+
+    setNameError(null);
     setLastRegistration({ name: reg.fullName, total: reg.totalPeople });
     setShowSuccess(true);
     // Auto-reset form after showing success
     setTimeout(() => {
       setFullName('');
       setCompanions(null);
+      setNameError(null);
     }, 300);
   };
 
@@ -74,11 +104,22 @@ export default function CheckIn() {
             <input
               type="text"
               value={fullName}
-              onChange={(e) => setFullName(e.target.value)}
+              onChange={(e) => handleNameChange(e.target.value)}
+              onBlur={handleNameBlur}
               placeholder="Digite seu nome completo"
-              className="w-full rounded-xl border-2 border-gray-200 bg-white px-4 py-3.5 text-gray-800 placeholder-gray-400 outline-none transition-all focus:border-teal-500 focus:ring-4 focus:ring-teal-500/10 text-base"
+              className={`w-full rounded-xl border-2 bg-white px-4 py-3.5 text-gray-800 placeholder-gray-400 outline-none transition-all text-base ${
+                nameError
+                  ? 'border-red-500 focus:border-red-500 focus:ring-4 focus:ring-red-500/10'
+                  : 'border-gray-200 focus:border-teal-500 focus:ring-4 focus:ring-teal-500/10'
+              }`}
               autoComplete="off"
             />
+            {nameError && (
+              <div className="mt-2.5 flex items-center gap-2 rounded-xl bg-red-50 px-3.5 py-2.5 text-xs sm:text-sm font-bold text-red-600 border border-red-200 animate-shake shadow-sm">
+                <AlertCircle className="h-4 w-4 shrink-0 text-red-500" />
+                <span>{nameError}</span>
+              </div>
+            )}
           </div>
 
           {/* Companion Selector */}
