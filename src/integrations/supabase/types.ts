@@ -14,7 +14,27 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      presencas: {
+        Row: {
+          acompanhantes: number
+          created_at: string
+          id: string
+          nome: string
+        }
+        Insert: {
+          acompanhantes?: number
+          created_at?: string
+          id?: string
+          nome: string
+        }
+        Update: {
+          acompanhantes?: number
+          created_at?: string
+          id?: string
+          nome?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
