@@ -53,8 +53,8 @@ export default function CheckIn() {
             <br />
             <span className="text-teal-600">FEIRA EDUSABER 2026</span>
           </h1>
-          <p className="text-center text-sm text-gray-500 mb-6">
-            Bem-vindo(a) à nossa Feira de Ciências e Cultura!
+          <p className="text-center text-sm text-gray-600 mb-6 leading-relaxed">
+            Seja bem-vindo(a)! Registre sua presença e a de seus acompanhantes para fazermos parte juntos desta jornada de ciência e cultura.
           </p>
 
           {/* Name Input */}
